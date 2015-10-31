@@ -1,20 +1,19 @@
 package SeminarkaPT;
 
-import java.util.Random;
-
 public class Planet extends Entity {
 	
 	/** promenna uchovavajici informaci o tom zda se na planetu budou nadale dovazet leky  */
 	private boolean status;
 	/** promenna uchovavajici informaci o poctu obyvatel */
-	private int populCount;
+	public int populCount;
 	/** promenna uchovajici informaci o vlastni produkci leku*/
 	private int drugProduction;
-	Random r = new Random();
 	
 	  															/* konstruktor */	     
 	/**
-	* Vytvori planetu se zadanym id a souradnicemi, poctem sousedu
+	* Vytvori planetu se zadanym id a souradnicemi, poctem sousedu a vygeneruje populaci podle normalniho rozdeleni
+	* pravdepodobnosti se stredem 3000000 a odchylkou 2900000 (nad 100000 obyvatel). Pravdepodobnost vygenerovani
+	* cisla mimo rozsah je teoreticky 0,3 %.
 	* @param id 
 	* @param xSour, ySour
 	* @param pocetSousC
@@ -24,12 +23,12 @@ public class Planet extends Entity {
 		status = true;
 		double population = r.nextGaussian() * 2900000/3 + 3000000;
 		populCount = (int) Math.round(population);
-		//System.out.println(populCount);
-		
+		//System.out.println(populCount);												
 	}	  
 	
 	/**
-	 * Tato metoda urcuje vlastni produkci leku na planete
+	 * Tato metoda urcuje vlastni produkci leku na planete. Tato metoda urcuje vlastni produkci leku na planete. Nejprve vygeneruje procentualni pokryti
+	 * a z nej se potom vypocita konecny pocet leku. Vyrobi se pouze cele baleni leku, proto cele cislo.
 	 * @param populCount
 	 * @return
 	 */
@@ -38,7 +37,7 @@ public class Planet extends Entity {
 		double drugs = Math.round(percentage*100.0)/100.0;
 		drugProduction = (int) Math.round(drugs * populCount);
 		//System.out.println(drugProduction);
-		return drugProduction;
+  		return drugProduction;
   	}
 	
 	/**

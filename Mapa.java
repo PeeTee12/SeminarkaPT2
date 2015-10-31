@@ -1,5 +1,6 @@
 package SeminarkaPT;
 
+//import javax.lang.model.element.NestingKind;
 import javax.swing.*;
 
 import java.awt.*;
@@ -14,10 +15,16 @@ public class Mapa extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/** promenna uchovavajici pocet central*/
 	int factoriesCount;
+	/** promenna uchovavajici pocet planet*/
 	int planetsCount;
+	int neighbourCountF;
+	int neighbourCountP;
+	/** ArrayList uchovavajici vsechny objekty typu Entita*/
 	ArrayList<Entity> ar;
-	int [][] adjId;
+	/** matice, ktera uchovava id 5 nejblisich sousedu*/
+	int [][] adjIdF, adjIdP;
 
 	/**
 	 * 
@@ -26,11 +33,15 @@ public class Mapa extends JFrame{
 	 * @param ar
 	 * @param adjId
 	 */
-	public Mapa(int planetsCount,int factoriesCount, ArrayList<Entity>ar,int [][] adjId) {
-		this.factoriesCount = planetsCount;
+	public Mapa(int factoriesCount, int planetsCount, int neighbourCountF, int neighbourCountP, ArrayList<Entity>ar,int [][] adjIdF, int [][] adjIdP) {
+		this.factoriesCount = factoriesCount;
 		this.planetsCount = planetsCount;
+		this.neighbourCountF = neighbourCountF;
+		this.neighbourCountP = neighbourCountP;
 		this.ar = ar;
-		this.adjId = adjId;
+		this.adjIdF = adjIdF;
+		this.adjIdP = adjIdP;
+		
 		
 		this.setTitle("Mapa");
 		this.setSize(800, 800);
@@ -60,14 +71,12 @@ public class Mapa extends JFrame{
 		g2.setColor(Color.BLUE);
 		for(int i = factoriesCount; i < ar.size(); i++) {
 			g2.fill(new Ellipse2D.Double(ar.get(i).getXAxis()+100, ar.get(i).getYAxis()+130 , 4, 4));
-			//System.out.println("Prave jsem nakreslil planetu c.: "+i+" na souradnicich X: "+ar.get(i).getxSour()+" a Y: "+ar.get(i).getySour());
 		}
 		
 		
 		g2.setColor(Color.GREEN);
 		for(int j = 0; j < factoriesCount; j++) {
 			g2.fill(new Ellipse2D.Double(ar.get(j).getXAxis()+100, ar.get(j).getYAxis()+130, 7, 7));
-			//System.out.println("Prave jsem nakreslil planetu c.: "+i+" na souradnicich X: "+ar2.get(i).getXSour()+" a Y: "+ar2.get(i).getYSour());
 		}
 		
 		
@@ -75,28 +84,18 @@ public class Mapa extends JFrame{
 		g2.fill(new Ellipse2D.Double(400 + 100, 400 + 130, 10, 10));
 		
 		
-		/*
-		g2.setColor(Color.BLACK);
-		g2.fill(new Ellipse2D.Double(ar4.get(0).getxSour() - 2 + 100, ar4.get(0).getySour() - 2 + 100, 4, 4));
-		*/
-		
-		/*
-		 * kontrola id
-		for (int i = 0; i < mSousId.length; i++) {
-			System.out.println("Kreslim: "+i+ " pocX: "+ (ar.get(i).getxSour() - 2 + 100)+" konX: "+(ar.get(mSousId [i][1]).getxSour() - 2 + 100)+" pocY: "+(ar.get(i).getySour() - 2 + 100)+" koncY: "+(ar.get(mSousId [i][1]).getxSour() - 2 + 100 ));
-		}*/
-		
-		
 		g2.setColor(Color.BLACK);
 		for (int i = 0; i < ar.size(); i++) {	
-			g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjId [i][1])).getXAxis()+2+100,  ar.get((adjId [i][1])).getYAxis()+2+130));
-			g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjId [i][2])).getXAxis()+2+100,  ar.get((adjId [i][2])).getYAxis()+2+130));
-			g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjId [i][3])).getXAxis()+2+100,  ar.get((adjId [i][3])).getYAxis()+2+130));
-			g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjId [i][4])).getXAxis()+2+100,  ar.get((adjId [i][4])).getYAxis()+2+130));
-			g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjId [i][5])).getXAxis()+2+100,  ar.get((adjId [i][5])).getYAxis()+2+130));
-						
-						
-			//System.out.println( "Prave jsem nakreslil drahu mezi planetou c.: " +i+ " na souradnicich X: " +ar.get(i).getxSour()+ " a Y: " +ar.get(i).getySour()+ " a mezi planetou c.: "+mSousId [i][1]+" na souradnicich X: "+ar.get(mSousId [i][1]).getxSour()+" a Y: "+ar.get(mSousId [i][1]).getySour() );
+			if(i < factoriesCount) {
+				for (int j = 0; j < neighbourCountF; j++) {
+					g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjIdF [i][j])).getXAxis()+2+100,  ar.get((adjIdF [i][j])).getYAxis()+2+130));
+				}				
+			}		
+			else{
+				for (int j = 0; j < neighbourCountP; j++) {
+					g2.draw(new Line2D.Double(ar.get(i).getXAxis()+2+100, ar.get(i).getYAxis()+2+130, ar.get((adjIdP [i-factoriesCount][j])).getXAxis()+2+100,  ar.get((adjIdP [i-factoriesCount][j])).getYAxis()+2+130));
+				}
+			}
 		} 
 	}
 }
